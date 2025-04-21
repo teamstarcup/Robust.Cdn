@@ -12,6 +12,11 @@ using Robust.Cdn.Services;
 var builder = WebApplication.CreateBuilder(args);
 builder.Host.UseSystemd();
 
+builder.WebHost.ConfigureKestrel(o => {
+    o.Limits.MinRequestBodyDataRate = new MinDataRate(bytesPerSecond: 100, gracePeriod: TimeSpan.FromSeconds(30));
+});
+
+
 // Add services to the container.
 
 builder.Services.Configure<CdnOptions>(builder.Configuration.GetSection(CdnOptions.Position));
